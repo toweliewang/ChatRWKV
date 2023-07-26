@@ -65,7 +65,12 @@ class PIPELINE():
             if top_k < len(probs) and top_k > 0:
                 probs[sorted_ids[:-top_k]] = 0
             if temperature != 1.0:
-                probs = probs ** (1.0 / temperature)
+                if int(temperature) == 0: 
+                    max_idx = torch.argmax(probs)
+                    probs = torch.zeros(len(probs))
+                    probs[max_idx] = 1
+                else:
+                    probs = probs ** (1.0 / temperature)
             probs = probs / np.sum(probs)
             out = np.random.choice(a=len(probs), p=probs)
             return int(out)
@@ -79,7 +84,12 @@ class PIPELINE():
             if top_k < len(probs) and top_k > 0:
                 probs[sorted_ids[:-top_k]] = 0
             if temperature != 1.0:
-                probs = probs ** (1.0 / temperature)
+                if int(temperature) == 0: 
+                    max_idx = torch.argmax(probs)
+                    probs = torch.zeros(len(probs))
+                    probs[max_idx] = 1
+                else:
+                    probs = probs ** (1.0 / temperature)
             out = torch.multinomial(probs, num_samples=1)[0]
             return int(out)
     
